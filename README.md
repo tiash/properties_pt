@@ -66,6 +66,8 @@ made to load the required application(s).
 
 Todos
 -----
-Allow more complicated sources; particularly to consult functions, and select nested properties.
+Allow more complicated sources; particularly to consult functions, and select
+nested properties.
 
+<!-- EOF -->
 
