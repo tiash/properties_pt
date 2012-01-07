@@ -47,7 +47,7 @@ simplify([{proplists,P1}|Ps],Keys1,Only) ->
   end;
 simplify([P|Ps],Keys,Only) -> [P|simplify(Ps,Keys,Only)].
 simplify2([P|Ps],Keys,Only,Accum) ->
-  {K,V} = lists:property(P),
+  {K,V} = proplists:property(P),
   case {is_in(K,Keys),is_in(K,Only)} of
     {false,true} -> simplify2(Ps,[K|Keys],Only,[{K,V}|Accum]);
     _ -> simplify2(Ps,Keys,Only,Accum)
