@@ -34,7 +34,6 @@
   {registered, []},
   %% don't register anything since we don't actually want to include ths in shiping code
   {applications, [kernel,stdlib,compiler,syntax_tool]},
-  {mod, []},
   {modules, [properties_pt]},
   {env, []}
  ]}.
