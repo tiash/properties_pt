@@ -138,9 +138,9 @@ value_code(Key,Source) ->
   end.
 
 value_code_(_Key,[]) -> {?atom(undefined),novalue};
-value_code_(Key,[A]) -> value_code(Key,A);
+value_code_(Key,[A]) -> value_code_(Key,A);
 value_code_(Key,[A|B]) ->
-  case value_code(Key,A) of
+  case value_code_(Key,A) of
     {Code,value} -> {Code,value};
     {ACode,ARes} -> 
       case value_code_(Key,B) of
@@ -148,7 +148,8 @@ value_code_(Key,[A|B]) ->
         {BCode,BRes} ->
           Var = var(),
           {?cases(ACode,[?clause([?atom(undefined)],none,[BCode]),?clause([Var],none,[Var])]),BRes}
-      end
+      end;
+    Err -> ?debug(Err), ?debug(Key), ?debug(A), ?debug(B)
   end;
 value_code_(Key,{static,A}) -> value_code_(Key,load(A));
 value_code_(Key,{application,A}) ->
@@ -182,7 +183,7 @@ code_gen(Module,Properties,Sources,OrigSources,GenCode,OnLoad) ->
   erl_syntax:revert_forms(?forms(
   [ ?attribute(module,Module) ]
   ++
-  [ ?export(Prop,0) || {Prop,_} <- Properties ]
+  [ ?export(Prop,0) || Prop <- Properties ]
   ++
   case NeedsGen andalso GenCode of
     true ->
@@ -204,7 +205,7 @@ code_gen(Module,Properties,Sources,OrigSources,GenCode,OnLoad) ->
   ++
   [ 
       gen_prop(Prop,Sources)
-  || {Prop,_} <- Properties ]
+  || Prop <- Properties ]
   ++
   case NeedsGen andalso GenCode of
     true ->
@@ -239,13 +240,13 @@ gen_reload(Module,Properties,Sources) ->
 
 gen_get(Properties) ->
   ?function(get,
-      [ ?clause([?atom(Prop)],none,[?apply(Prop,[])]) || {Prop,_} <- Properties ]
+      [ ?clause([?atom(Prop)],none,[?apply(Prop,[])]) || Prop <- Properties ]
       ++
       [ ?clause([?underscore],none,[?atom(undefined)]) ]
     ).
 gen_get_all(Properties) ->
   ?function(get,
-      [ ?clause([],none,[?list([ ?tuple([?atom(Prop),?apply(Prop,[])]) || {Prop,_} <- Properties ])]) ]
+      [ ?clause([],none,[?list([ ?tuple([?atom(Prop),?apply(Prop,[])]) || Prop <- Properties ])]) ]
     ).
 
 gen_set() ->
@@ -306,4 +307,5 @@ property(Prop) when is_atom(Prop) -> {Prop,undefined};
 property(Props) when is_list(Props) -> [ property(P) || P<-Props ];
 property(Prop) -> Prop.
   
+
 
