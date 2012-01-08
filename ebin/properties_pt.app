@@ -2,7 +2,7 @@
              [{description,"Parse transform for generating runtime updatable properties modules"},
               {vsn,"1.0"},
               {registered,[]},
-              {applications,[]},
+              {applications,[kernel,stdlib,compiler,syntax_tool]},
               {mod,[]},
-              {env,[]},
-              {modules,[properties_pt]}]}.
+              {modules,[properties_pt]},
+              {env,[]}]}.
